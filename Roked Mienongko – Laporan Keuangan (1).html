@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roked Mienongko – Laporan Keuangan</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--tx:#2a2420;--mut:#7a6f66;--bd:#e7dfd4;--ac:#c2410c;--in:#15803d;--out:#b91c1c;--hd:#fff4e6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1714;--card:#26211d;--tx:#f1ebe4;--mut:#a69a8f;--bd:#3a332d;--ac:#fb923c;--in:#4ade80;--out:#f87171;--hd:#2f2721;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1714;--card:#26211d;--tx:#f1ebe4;--mut:#a69a8f;--bd:#3a332d;--ac:#fb923c;--in:#4ade80;--out:#f87171;--hd:#2f2721;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:960px;margin:0 auto;padding:16px}
+header{background:var(--hd);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+h1{margin:0;font:700 26px/1.2 Georgia,serif;color:var(--ac)}
+header p{margin:4px 0 0;color:var(--mut);font-size:13px}
+.g{display:grid;gap:10px;grid-template-columns:repeat(3,1fr);margin-bottom:14px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.c small{color:var(--mut);display:block;font-size:12px}
+.c b{font-size:16px;word-break:break-word}
+.in{color:var(--in)}.out{color:var(--out)}
+section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:14px}
+h2{margin:0 0 10px;font-size:16px}
+form{display:grid;gap:8px;grid-template-columns:repeat(2,1fr)}
+form .f{grid-column:1/-1}
+label{font-size:12px;color:var(--mut);display:block}
+input,select,button{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+button{background:var(--ac);color:#fff;border:0;font-weight:600;cursor:pointer}
+button.s{background:transparent;color:var(--out);border:1px solid var(--bd);width:auto;padding:3px 8px;font-size:12px}
+.bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.bar>*{flex:1;min-width:130px}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--bd)}
+th{color:var(--mut);font-weight:600;font-size:12px}
+td.n,th.n{text-align:right;white-space:nowrap}
+.e{color:var(--mut);text-align:center;padding:18px}
+@media(max-width:560px){.g{grid-template-columns:1fr}}
+@media print{form,.bar,button,.no{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+<h1>Roked Mienongko</h1>
+<p>Laporan keuangan: catatan pemasukan dan pengeluaran yang lengkap dan rinci</p>
+</header>
+
+<div class="g">
+<div class="c"><small>Total pemasukan</small><b class="in" id="ti">Rp 0</b></div>
+<div class="c"><small>Total pengeluaran</small><b class="out" id="to">Rp 0</b></div>
+<div class="c"><small>Saldo</small><b id="sd">Rp 0</b></div>
+</div>
+
+<section class="no">
+<h2>Tambah catatan</h2>
+<form id="fm">
+<div><label>Tanggal</label><input type="date" id="tg" required></div>
+<div><label>Jenis</label><select id="jn"><option value="in">Pemasukan</option><option value="out">Pengeluaran</option></select></div>
+<div><label>Kategori</label><input id="kt" list="kl" placeholder="mis. Penjualan, Bahan baku" required></div>
+<div><label>Jumlah (Rp)</label><input type="number" id="jm" min="1" step="any" inputmode="numeric" required></div>
+<div class="f"><label>Keterangan</label><input id="ke" placeholder="Rincian transaksi"></div>
+<div class="f"><button type="submit">Simpan catatan</button></div>
+</form>
+<datalist id="kl"></datalist>
+</section>
+
+<section>
+<h2>Rincian transaksi</h2>
+<div class="bar no">
+<select id="fb"><option value="">Semua bulan</option></select>
+<select id="fj"><option value="">Semua jenis</option><option value="in">Pemasukan</option><option value="out">Pengeluaran</option></select>
+<button type="button" id="pr">Cetak / simpan PDF</button>
+</div>
+<div class="sc"><table>
+<thead><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th class="n">Masuk</th><th class="n">Keluar</th><th class="n">Saldo</th><th class="no"></th></tr></thead>
+<tbody id="tb"></tbody>
+</table></div>
+</section>
+
+<section>
+<h2>Rekap per kategori</h2>
+<div class="sc"><table>
+<thead><tr><th>Kategori</th><th class="n">Masuk</th><th class="n">Keluar</th><th class="n">Selisih</th></tr></thead>
+<tbody id="rk"></tbody>
+</table></div>
+</section>
+<p class="no" style="font-size:12px;color:var(--mut)">Data tersimpan di browser perangkat ini.</p>
+</div>
+
+<script>
+var KEY="roked-mienongko-v1",D=[];
+try{D=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){D=[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function rp(n){return (n<0?"-":"")+"Rp "+Math.abs(Math.round(n)).toLocaleString("id-ID")}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+var BLN=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+function tgl(s){var p=s.split("-");return p[2]+" "+BLN[+p[1]-1]+" "+p[0]}
+$("tg").value=new Date().toISOString().slice(0,10);
+$("fm").onsubmit=function(e){
+e.preventDefault();
+D.push({id:Date.now(),t:$("tg").value,j:$("jn").value,k:$("kt").value.trim(),m:+$("jm").value,n:$("ke").value.trim()});
+save();$("kt").value="";$("jm").value="";$("ke").value="";render()};
+function hapus(id){if(confirm("Hapus catatan ini?")){D=D.filter(function(x){return x.id!==id});save();render()}}
+$("pr").onclick=function(){window.print()};
+$("fb").onchange=render;$("fj").onchange=render;
+function render(){
+var sel=$("fb").value,months={},cats={};
+D.forEach(function(x){months[x.t.slice(0,7)]=1;cats[x.k]=1});
+var ms=Object.keys(months).sort().reverse();
+$("fb").innerHTML='<option value="">Semua bulan</option>'+ms.map(function(m){var p=m.split("-");return '<option value="'+m+'">'+BLN[+p[1]-1]+" "+p[0]+"</option>"}).join("");
+$("fb").value=ms.indexOf(sel)>-1?sel:"";
+$("kl").innerHTML=Object.keys(cats).map(function(c){return '<option value="'+esc(c).replace(/"/g,"&quot;")+'">'}).join("");
+var fb=$("fb").value,fj=$("fj").value;
+var L=D.filter(function(x){return (!fb||x.t.slice(0,7)===fb)&&(!fj||x.j===fj)}).sort(function(a,b){return a.t<b.t?-1:a.t>b.t?1:a.id-b.id});
+var ti=0,to=0,run=0,h="",rk={};
+L.forEach(function(x){
+var i=x.j==="in";
+if(i){ti+=x.m;run+=x.m}else{to+=x.m;run-=x.m}
+var r=rk[x.k]||(rk[x.k]={i:0,o:0});
+if(i)r.i+=x.m;else r.o+=x.m;
+h+="<tr><td>"+tgl(x.t)+"</td><td>"+esc(x.k)+"</td><td>"+esc(x.n||"-")+'</td><td class="n in">'+(i?rp(x.m):"")+'</td><td class="n out">'+(i?"":rp(x.m))+'</td><td class="n">'+rp(run)+'</td><td class="no"><button class="s" onclick="hapus('+x.id+')">Hapus</button></td></tr>'});
+$("tb").innerHTML=h||'<tr><td colspan="7" class="e">Belum ada catatan. Tambahkan transaksi pertama di atas.</td></tr>';
+$("ti").textContent=rp(ti);$("to").textContent=rp(to);
+$("sd").textContent=rp(ti-to);$("sd").className=ti-to<0?"out":"in";
+var ks=Object.keys(rk).sort(),rh="";
+ks.forEach(function(k){var r=rk[k];rh+="<tr><td>"+esc(k)+'</td><td class="n in">'+rp(r.i)+'</td><td class="n out">'+rp(r.o)+'</td><td class="n">'+rp(r.i-r.o)+"</td></tr>"});
+$("rk").innerHTML=rh||'<tr><td colspan="4" class="e">Belum ada data.</td></tr>'}
+render();
+</script>
+</body>
+</html>
